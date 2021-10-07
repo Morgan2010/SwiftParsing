@@ -81,5 +81,14 @@ final class StringSelectorTests: XCTestCase {
         XCTAssertEqual(String(result!.value), correct!)
     }
     
+    func testFindSubStringReturnsNilForLastIndex() {
+        guard let newIndex = firstIndex.addToIndex(amount: 17, in: parent!) else {
+            XCTAssertTrue(false)
+            return
+        }
+        let result = selector!.findSubString(after: newIndex, with: "$", and: "}", in: parent!)
+        XCTAssertNil(result)
+    }
+    
     
 }

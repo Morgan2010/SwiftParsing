@@ -35,6 +35,7 @@ struct StringSelector {
         let viableChoices = IndexableSubString(parent: parent, indexes: startIndex..<parent.lastIndex)
         guard
             let firstCandidate = viableChoices.firstIndex(where: { balancedLower.contains($0) }),
+            firstCandidate != parent.lastIndex,
             let firstIndex = firstCandidate.increment(in: parent)
         else {
             return nil
