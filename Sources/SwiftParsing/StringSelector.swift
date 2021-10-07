@@ -17,11 +17,16 @@ struct StringSelector {
         let candidates = IndexableSubString(parent: parent, indexes: startIndex..<endIndex)
         guard
             let lowerBound = candidates.firstIndex(where: { $0 == first }),
-            let upperBound = candidates[lowerBound...].firstIndex(where: { $0 == last })
+            let upperBound = candidates[lowerBound..<parent.lastIndex].firstIndex(where: { $0 == last }),
+            upperBound > lowerBound
         else {
             return nil
         }
         return IndexableSubString(parent: parent, indexes: lowerBound..<upperBound)
+    }
+    
+    func findSubString(after index: String.Index, with balancedLower: Character, and balancedUpper: Character, in parent: String) -> IndexableSubString? {
+        self.findSubString(after: index, between: Set(arrayLiteral: balancedLower), and: Set(arrayLiteral: balancedUpper), in: parent)
     }
     
     func findSubString(after index: String.Index, between balancedLower: Set<Character>, and balancedUpper: Set<Character>, in parent: String) -> IndexableSubString? {
