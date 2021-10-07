@@ -9,7 +9,7 @@ import Foundation
 
 
 /// A struct to help find sub strings within a parent string.
-struct StringSelector {
+public struct StringSelector {
     
     
     /// Finds a substring between 2 characters and after an index in a parent string.
@@ -19,7 +19,7 @@ struct StringSelector {
     ///   - last: The delimiting character which signifies the end of the target string.
     ///   - parent: The string to search.
     /// - Returns: An optional `IndexableSubString` which represents the found string.
-    func findSubString(after index: String.Index, between first: Character, and last: Character, in parent: String) -> IndexableSubString? {
+    public func findSubString(after index: String.Index, between first: Character, and last: Character, in parent: String) -> IndexableSubString? {
         guard let startIndex = index.increment(in: parent) else {
             return nil
         }
@@ -43,7 +43,7 @@ struct StringSelector {
     ///   - balancedUpper: The character immediately after the end of the sequence.
     ///   - parent: The string to search.
     /// - Returns: An optional `IndexableSubString` representing the string that was found.
-    func findSubString(after index: String.Index, with balancedLower: Character, and balancedUpper: Character, in parent: String) -> IndexableSubString? {
+    public func findSubString(after index: String.Index, with balancedLower: Character, and balancedUpper: Character, in parent: String) -> IndexableSubString? {
         self.findSubString(after: index, between: Set(arrayLiteral: balancedLower), and: Set(arrayLiteral: balancedUpper), in: parent)
     }
     
@@ -57,7 +57,7 @@ struct StringSelector {
     ///   - balancedUpper: The set of possible characters immediately after the target string.
     ///   - parent: The string to search.
     /// - Returns: An optional `IndexableSubString` which represents the found sub string.
-    func findSubString(after index: String.Index, between balancedLower: Set<Character>, and balancedUpper: Set<Character>, in parent: String) -> IndexableSubString? {
+    public func findSubString(after index: String.Index, between balancedLower: Set<Character>, and balancedUpper: Set<Character>, in parent: String) -> IndexableSubString? {
         guard let startIndex = index.increment(in: parent) else {
             return nil
         }

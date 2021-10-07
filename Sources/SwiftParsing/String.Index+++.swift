@@ -8,7 +8,7 @@
 import Foundation
 
 /// Adds some helper functions for changing the value of an index with respect to a string.
-extension String.Index {
+public extension String.Index {
     
     /// Add a utf16 offset to an index.
     /// - Parameters:
@@ -36,7 +36,7 @@ extension String.Index {
     
 }
 
-extension StringProtocol {
+public extension StringProtocol {
     
     /// Helper property for retrieving the first index in a string.
     var firstIndex: String.Index {
