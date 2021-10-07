@@ -7,8 +7,14 @@
 
 import Foundation
 
+/// Adds some helper functions for changing the value of an index with respect to a string.
 extension String.Index {
     
+    /// Add a utf16 offset to an index.
+    /// - Parameters:
+    ///   - amount: The amount to increment.
+    ///   - parent: The reference string that this index is used in.
+    /// - Returns: A new index. The index is bounded to the size of the parent string.
     func addToIndex(amount: Int, in parent: String) -> String.Index? {
         let newIndex = self.utf16Offset(in: parent) + amount
         guard newIndex < parent.count else {
@@ -17,6 +23,9 @@ extension String.Index {
         return String.Index(utf16Offset: newIndex, in: parent)
     }
     
+    /// Increments the index by 1 utf16 offset.
+    /// - Parameter parent: The parent this index is used in.
+    /// - Returns: The new index. The index is bounded to the size of the parent string.
     func increment(in parent: String) -> String.Index? {
         let newIndex = self.utf16Offset(in: parent) + 1
         guard newIndex < parent.count else {
@@ -29,10 +38,12 @@ extension String.Index {
 
 extension StringProtocol {
     
+    /// Helper property for retrieving the first index in a string.
     var firstIndex: String.Index {
         String.Index(utf16Offset: 0, in: self)
     }
     
+    /// Helper property for retrieving the last index in a string.
     var lastIndex: String.Index {
         String.Index(utf16Offset: self.count - 1, in: self)
     }
