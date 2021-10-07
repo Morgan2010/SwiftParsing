@@ -18,7 +18,7 @@ final class StringSelectorTests: XCTestCase {
     private var correct: String?
     
     private var firstIndex: String.Index {
-        parent!.firstIndex
+        parent!.firstIndex!
     }
     
     override func setUp() {

@@ -39,13 +39,19 @@ public extension String.Index {
 public extension StringProtocol {
     
     /// Helper property for retrieving the first index in a string.
-    var firstIndex: String.Index {
-        String.Index(utf16Offset: 0, in: self)
+    var firstIndex: String.Index? {
+        guard self.count > 0 else {
+            return nil
+        }
+        return String.Index(utf16Offset: 0, in: self)
     }
     
     /// Helper property for retrieving the last index in a string.
-    var lastIndex: String.Index {
-        String.Index(utf16Offset: self.count - 1, in: self)
+    var lastIndex: String.Index? {
+        guard self.count > 0 else {
+            return nil
+        }
+        return String.Index(utf16Offset: self.count - 1, in: self)
     }
     
 }

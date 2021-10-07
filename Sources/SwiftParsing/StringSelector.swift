@@ -80,10 +80,13 @@ public struct StringSelector {
     }
     
     private func findRangeForStartingCharacters(in parent: String, for chars: Set<Character>, after index: String.Index) -> Range<String.Index>? {
-        guard let startIndex = index.increment(in: parent) else {
+        guard
+            let startIndex = index.increment(in: parent),
+            let lastIndex = parent.lastIndex
+        else {
             return nil
         }
-        let viableChoices = IndexableSubString(parent: parent, indexes: startIndex..<parent.lastIndex)
+        let viableChoices = IndexableSubString(parent: parent, indexes: startIndex..<lastIndex)
         guard
             let firstCandidate = viableChoices.firstIndex(where: { chars.contains($0) }),
             firstCandidate != parent.lastIndex,
@@ -91,7 +94,7 @@ public struct StringSelector {
         else {
             return nil
         }
-        return firstIndex..<parent.lastIndex
+        return firstIndex..<lastIndex
     }
     
 }
