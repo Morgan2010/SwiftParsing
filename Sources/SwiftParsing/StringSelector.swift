@@ -13,10 +13,9 @@ struct StringSelector {
         guard let startIndex = index.increment(in: parent) else {
             return nil
         }
-        let endIndex = String.Index(utf16Offset: parent.count, in: parent)
-        let candidates = IndexableSubString(parent: parent, indexes: startIndex..<endIndex)
+        let candidates = IndexableSubString(parent: parent, indexes: startIndex..<parent.lastIndex)
         guard
-            let lowerBound = candidates.firstIndex(where: { $0 == first }),
+            let lowerBound = candidates.firstIndex(where: { $0 == first })?.increment(in: parent),
             let upperBound = candidates[lowerBound..<parent.lastIndex].firstIndex(where: { $0 == last }),
             upperBound > lowerBound
         else {
@@ -34,10 +33,13 @@ struct StringSelector {
             return nil
         }
         let viableChoices = IndexableSubString(parent: parent, indexes: startIndex..<parent.lastIndex)
-        guard let firstCandidate = viableChoices.firstIndex(where: { balancedLower.contains($0) }) else {
+        guard
+            let firstCandidate = viableChoices.firstIndex(where: { balancedLower.contains($0) }),
+            let firstIndex = firstCandidate.increment(in: parent)
+        else {
             return nil
         }
-        let candidates = IndexableSubString(parent: parent, indexes: firstCandidate..<parent.lastIndex)
+        let candidates = IndexableSubString(parent: parent, indexes: firstIndex..<parent.lastIndex)
         var count = 1
         for i in candidates.indices {
             let c = parent[i]
@@ -49,7 +51,7 @@ struct StringSelector {
                 count = count - 1
             }
             if count == 0 {
-                return IndexableSubString(parent: parent, indexes: firstCandidate..<i)
+                return IndexableSubString(parent: parent, indexes: firstIndex..<i)
             }
         }
         return nil

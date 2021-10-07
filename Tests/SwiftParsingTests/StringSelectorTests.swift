@@ -62,5 +62,24 @@ final class StringSelectorTests: XCTestCase {
         XCTAssertEqual(String(result!.value), "d{ef}g")
     }
     
+    func testFindSubStringIsInvalidAfterOnlyCandidate() {
+        guard let newIndex = firstIndex.addToIndex(amount: 3, in: parent!) else {
+            XCTAssertTrue(false)
+            return
+        }
+        let result = selector!.findSubString(after: newIndex, with: "$", and: "}", in: parent!)
+        XCTAssertNil(result)
+    }
+    
+    func testFindSubStringIsStillValidJustBeforeOnlyCandidate() {
+        guard let newIndex = firstIndex.addToIndex(amount: 2, in: parent!) else {
+            XCTAssertTrue(false)
+            return
+        }
+        let result = selector!.findSubString(after: newIndex, with: "$", and: "}", in: parent!)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(String(result!.value), correct!)
+    }
+    
     
 }

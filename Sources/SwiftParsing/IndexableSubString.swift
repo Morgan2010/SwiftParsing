@@ -52,7 +52,7 @@ struct IndexableSubString: Collection, IteratorProtocol {
         guard let rawIndex = parent[indexes].firstIndex(where: filter) else {
             return nil
         }
-        return rawIndex.addToIndex(amount: startIndex.utf16Offset(in: parent), in: parent)
+        return rawIndex
     }
     
     mutating func next() -> Character? {
