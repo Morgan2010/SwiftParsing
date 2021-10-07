@@ -90,5 +90,13 @@ final class StringSelectorTests: XCTestCase {
         XCTAssertNil(result)
     }
     
+    func testFindSubStringIsValidForLastIndex() {
+        XCTAssertNotNil(selector)
+        XCTAssertNotNil(parent)
+        let result = selector!.findSubString(after: firstIndex, between: "g", and: "i", in: parent!)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(String(result!.value), "}h")
+    }
+    
     
 }

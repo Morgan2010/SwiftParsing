@@ -54,4 +54,8 @@ public extension StringProtocol {
         return String.Index(utf16Offset: self.count - 1, in: self)
     }
     
+    var countIndex: String.Index {
+        String.Index(utf16Offset: self.count, in: self)
+    }
+    
 }
