@@ -20,18 +20,14 @@ public struct StringSelector {
     ///   - parent: The string to search.
     /// - Returns: An optional `IndexableSubString` which represents the found string.
     public func findSubString(after index: String.Index, between first: Character, and last: Character, in parent: String) -> IndexableSubString? {
-        guard let startIndex = index.increment(in: parent) else {
-            return nil
-        }
-        let candidates = IndexableSubString(parent: parent, indexes: startIndex..<parent.lastIndex)
         guard
-            let lowerBound = candidates.firstIndex(where: { $0 == first })?.increment(in: parent),
-            let upperBound = candidates[lowerBound..<parent.lastIndex].firstIndex(where: { $0 == last }),
-            upperBound > lowerBound
+            let range = findRangeForStartingCharacter(in: parent, for: first, after: index),
+            let upperBound = IndexableSubString(parent: parent, indexes: range).firstIndex(where: { $0 == last }),
+            upperBound > range.lowerBound
         else {
             return nil
         }
-        return IndexableSubString(parent: parent, indexes: lowerBound..<upperBound)
+        return IndexableSubString(parent: parent, indexes: range.lowerBound..<upperBound)
     }
     
     
@@ -58,18 +54,10 @@ public struct StringSelector {
     ///   - parent: The string to search.
     /// - Returns: An optional `IndexableSubString` which represents the found sub string.
     public func findSubString(after index: String.Index, between balancedLower: Set<Character>, and balancedUpper: Set<Character>, in parent: String) -> IndexableSubString? {
-        guard let startIndex = index.increment(in: parent) else {
+        guard let range = findRangeForStartingCharacters(in: parent, for: balancedLower, after: index) else {
             return nil
         }
-        let viableChoices = IndexableSubString(parent: parent, indexes: startIndex..<parent.lastIndex)
-        guard
-            let firstCandidate = viableChoices.firstIndex(where: { balancedLower.contains($0) }),
-            firstCandidate != parent.lastIndex,
-            let firstIndex = firstCandidate.increment(in: parent)
-        else {
-            return nil
-        }
-        let candidates = IndexableSubString(parent: parent, indexes: firstIndex..<parent.lastIndex)
+        let candidates = IndexableSubString(parent: parent, indexes: range)
         var count = 1
         for i in candidates.indices {
             let c = parent[i]
@@ -81,10 +69,29 @@ public struct StringSelector {
                 count = count - 1
             }
             if count == 0 {
-                return IndexableSubString(parent: parent, indexes: firstIndex..<i)
+                return IndexableSubString(parent: parent, indexes: range.lowerBound..<i)
             }
         }
         return nil
+    }
+    
+    private func findRangeForStartingCharacter(in parent: String, for char: Character, after index: String.Index) -> Range<String.Index>? {
+        findRangeForStartingCharacters(in: parent, for: Set(arrayLiteral: char), after: index)
+    }
+    
+    private func findRangeForStartingCharacters(in parent: String, for chars: Set<Character>, after index: String.Index) -> Range<String.Index>? {
+        guard let startIndex = index.increment(in: parent) else {
+            return nil
+        }
+        let viableChoices = IndexableSubString(parent: parent, indexes: startIndex..<parent.lastIndex)
+        guard
+            let firstCandidate = viableChoices.firstIndex(where: { chars.contains($0) }),
+            firstCandidate != parent.lastIndex,
+            let firstIndex = firstCandidate.increment(in: parent)
+        else {
+            return nil
+        }
+        return firstIndex..<parent.lastIndex
     }
     
 }
