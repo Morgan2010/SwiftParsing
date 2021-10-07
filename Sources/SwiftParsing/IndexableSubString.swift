@@ -7,10 +7,11 @@
 
 import Foundation
 
-@available(macOSApplicationExtension 10.15.0, *)
 struct IndexableSubString: Collection, IteratorProtocol {
     
     typealias Element = Character
+    
+    typealias Index = String.Index
     
     var count: Int {
         indexes.upperBound.utf16Offset(in: parent) - indexes.lowerBound.utf16Offset(in: parent)
@@ -41,15 +42,22 @@ struct IndexableSubString: Collection, IteratorProtocol {
     }
     
     func index(after i: String.Index) -> String.Index {
-        guard let newIndex = incrementIndex(index: i) else {
+        guard let newIndex = i.increment(in: parent) else {
             return i
         }
         return newIndex
     }
     
+    func firstIndex(where filter: (Character) -> Bool) -> String.Index? {
+        guard let rawIndex = parent[indexes].firstIndex(where: filter) else {
+            return nil
+        }
+        return rawIndex.addToIndex(amount: startIndex.utf16Offset(in: parent), in: parent)
+    }
+    
     mutating func next() -> Character? {
         let result = parent[currentIndex]
-        guard let newIndex = incrementIndex(index: currentIndex) else {
+        guard let newIndex = currentIndex.increment(in: parent) else {
             return result
         }
         currentIndex = newIndex
@@ -59,14 +67,6 @@ struct IndexableSubString: Collection, IteratorProtocol {
     
     subscript(position: String.Index) -> Character {
         parent[position]
-    }
-    
-    private func incrementIndex(index: String.Index) -> String.Index? {
-        let utfIndex = currentIndex.utf16Offset(in: parent)
-        guard utfIndex < (parent.count - 1) else {
-            return nil
-        }
-        return String.Index(utf16Offset: utfIndex + 1, in: parent)
     }
     
 }
