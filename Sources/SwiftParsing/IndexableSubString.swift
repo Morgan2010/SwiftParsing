@@ -34,6 +34,12 @@ struct IndexableSubString: Collection, IteratorProtocol {
         parent[indexes]
     }
     
+    init(parent: String, indexes: Range<String.Index>) {
+        self.parent = parent
+        self.indexes = indexes
+        self.currentIndex = indexes.lowerBound
+    }
+    
     func index(after i: String.Index) -> String.Index {
         guard let newIndex = incrementIndex(index: i) else {
             return i
