@@ -54,6 +54,7 @@ public extension StringProtocol {
         return String.Index(utf16Offset: self.count - 1, in: self)
     }
     
+    /// The index immediately after the end of the string. Indexing the string with this index will return an out-of-bounds error.
     var countIndex: String.Index {
         String.Index(utf16Offset: self.count, in: self)
     }
