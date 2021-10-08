@@ -34,6 +34,14 @@ public extension String.Index {
         return String.Index(utf16Offset: newIndex, in: parent)
     }
     
+    func decrement(in parent: String) -> String.Index? {
+        let newIndex = self.utf16Offset(in: parent) - 1
+        guard newIndex > 0 else {
+            return nil
+        }
+        return String.Index(utf16Offset: newIndex, in: parent)
+    }
+    
 }
 
 public extension StringProtocol {
