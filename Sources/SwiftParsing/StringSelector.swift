@@ -11,14 +11,14 @@ import Foundation
 /// A struct to help find sub strings within a parent string.
 public struct StringSelector {
     
-    func findIndexes(for word: String, in parent: String) -> IndexableSubString? {
+    public func findIndexes(for word: String, in parent: String) -> IndexableSubString? {
         guard let firstIndex = parent.firstIndex else {
             return nil
         }
         return findIndexes(for: word, in: IndexableSubString(parent: parent, indexes: firstIndex..<parent.countIndex))
     }
     
-    func findIndexes(for word: String, after index: String.Index, in parent: String) -> IndexableSubString? {
+    public func findIndexes(for word: String, after index: String.Index, in parent: String) -> IndexableSubString? {
         guard
             index < parent.countIndex,
             let firstIndex = index.increment(in: parent)
