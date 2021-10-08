@@ -31,6 +31,16 @@ public struct StringSelector {
         return findIndexes(for: word, in: IndexableSubString(parent: parent, indexes: range))
     }
     
+    public func findSubString(with first: Character, and last: Character, in parent: String) -> IndexableSubString? {
+        guard
+            let range = findRangeForStartingCharacters(in: parent, for: [first]),
+            let lastIndex = IndexableSubString(parent: parent, indexes: range).firstIndex(where: { $0 == last })
+        else {
+            return nil
+        }
+        return IndexableSubString(parent: parent, indexes: range.lowerBound..<lastIndex)
+    }
+    
     public func findSubString(between balancedFirst: Character, and balancedLast: Character, in parent: String) -> IndexableSubString? {
         findSubString(between: [balancedFirst], and: [balancedLast], in: parent)
     }
