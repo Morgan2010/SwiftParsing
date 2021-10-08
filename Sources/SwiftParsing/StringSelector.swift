@@ -11,6 +11,23 @@ import Foundation
 /// A struct to help find sub strings within a parent string.
 public struct StringSelector {
     
+    func findIndexes(for word: String, in parent: String) -> IndexableSubString? {
+        guard let firstIndex = parent.firstIndex else {
+            return nil
+        }
+        return findIndexes(for: word, in: IndexableSubString(parent: parent, indexes: firstIndex..<parent.countIndex))
+    }
+    
+    func findIndexes(for word: String, after index: String.Index, in parent: String) -> IndexableSubString? {
+        guard
+            index < parent.countIndex,
+            let firstIndex = index.increment(in: parent)
+        else {
+            return nil
+        }
+        let range = firstIndex..<parent.countIndex
+        return findIndexes(for: word, in: IndexableSubString(parent: parent, indexes: range))
+    }
     
     /// Finds a substring between 2 characters and after an index in a parent string.
     /// - Parameters:
@@ -70,6 +87,24 @@ public struct StringSelector {
             }
             if count == 0 {
                 return IndexableSubString(parent: parent, indexes: range.lowerBound..<i)
+            }
+        }
+        return nil
+    }
+    
+    private func findIndexes(for word: String, in parent: IndexableSubString) -> IndexableSubString? {
+        let candidates = parent
+        let wordCount = word.count
+        for i in candidates.indices {
+            guard
+                let lastWordIndex = i.addToIndex(amount: wordCount, in: parent.parent),
+                lastWordIndex <= parent.endIndex
+            else {
+                return nil
+            }
+            let candidateRange = i..<lastWordIndex
+            if parent.parent[candidateRange] == word {
+                return IndexableSubString(parent: parent.parent, indexes: candidateRange)
             }
         }
         return nil
