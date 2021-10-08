@@ -11,6 +11,8 @@ import Foundation
 /// A struct to help find sub strings within a parent string.
 public struct StringSelector {
     
+    public init() {}
+    
     public func findIndexes(for word: String, in parent: String) -> IndexableSubString? {
         guard let firstIndex = parent.firstIndex else {
             return nil
