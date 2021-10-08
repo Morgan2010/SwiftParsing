@@ -30,6 +30,10 @@ public struct IndexableSubString: Collection, IteratorProtocol {
     /// The range of indexes this substring represents in the parent string.
     public let indexes: Range<String.Index>
     
+    public var lastIndex: String.Index? {
+        endIndex.decrement(in: parent)
+    }
+    
     /// The parent string this substring was created from.
     public let parent: String
     
