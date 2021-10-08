@@ -31,6 +31,32 @@ public struct StringSelector {
         return findIndexes(for: word, in: IndexableSubString(parent: parent, indexes: range))
     }
     
+    public func findSubString(between balancedFirst: Character, and balancedLast: Character, in parent: String) -> IndexableSubString? {
+        findSubString(between: [balancedFirst], and: [balancedLast], in: parent)
+    }
+    
+    public func findSubString(between balancedLower: Set<Character>, and balancedUpper: Set<Character>, in parent: String) -> IndexableSubString? {
+        guard let range = findRangeForStartingCharacters(in: parent, for: balancedLower) else {
+            return nil
+        }
+        let candidates = IndexableSubString(parent: parent, indexes: range)
+        var count = 1
+        for i in candidates.indices {
+            let c = parent[i]
+            if balancedLower.contains(c) {
+                count = count + 1
+                continue
+            }
+            if balancedUpper.contains(c) {
+                count = count - 1
+            }
+            if count == 0 {
+                return IndexableSubString(parent: parent, indexes: range.lowerBound..<i)
+            }
+        }
+        return nil
+    }
+    
     /// Finds a substring between 2 characters and after an index in a parent string.
     /// - Parameters:
     ///   - index: The index just before the first index which is checked in the parent string.
@@ -114,6 +140,17 @@ public struct StringSelector {
     
     private func findRangeForStartingCharacter(in parent: String, for char: Character, after index: String.Index) -> Range<String.Index>? {
         findRangeForStartingCharacters(in: parent, for: Set(arrayLiteral: char), after: index)
+    }
+    
+    private func findRangeForStartingCharacters(in parent: String, for chars: Set<Character>) -> Range<String.Index>? {
+        guard
+            let firstCandidate = parent.firstIndex(where: { chars.contains($0) }),
+            firstCandidate != parent.lastIndex,
+            let firstIndex = firstCandidate.increment(in: parent)
+        else {
+            return nil
+        }
+        return firstIndex..<parent.countIndex
     }
     
     private func findRangeForStartingCharacters(in parent: String, for chars: Set<Character>, after index: String.Index) -> Range<String.Index>? {
