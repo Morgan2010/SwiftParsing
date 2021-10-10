@@ -40,10 +40,10 @@ public struct StringMutator {
         guard amount > 0 else {
             return str1 + str2
         }
-        if str1.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if str1.trimmingCharacters(in: .whitespaces).isEmpty {
             return str2
         }
-        if str2.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if str2.trimmingCharacters(in: .whitespaces).isEmpty {
             return str1
         }
         let newLines = String(repeating: "\n", count: amount)
@@ -61,7 +61,7 @@ public struct StringMutator {
     }
     
     private func countWhitespaceAtFront(of data: String) -> Int? {
-        guard let count = data.firstIndex(where: { $0 != "\n" || $0 != " " || $0 != "\0" || $0 != "\r" || $0 != "\t" }) else {
+        guard let count = data.firstIndex(where: { $0 != "\n" && $0 != " " && $0 != "\0" && $0 != "\r" && $0 != "\t" }) else {
             return nil
         }
         return count.utf16Offset(in: data) + 1
