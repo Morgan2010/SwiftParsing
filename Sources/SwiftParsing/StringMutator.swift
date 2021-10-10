@@ -50,4 +50,21 @@ public struct StringMutator {
         return str1 + newLines + str2
     }
     
+    public func removeRedundentIndentation(data: String) -> String {
+        guard let minIndent = (data.map { countWhitespaceAtFront(of: String($0)) }).min() else {
+            return data
+        }
+        let redundentIndent = minIndent / indentString.count
+        let components = data.components(separatedBy: .newlines)
+        let sanitisedLines = components.map { $0.dropFirst(redundentIndent) }
+        return sanitisedLines.reduce("") { joinWithNewLines(str1: $0, str2: String($1)) }
+    }
+    
+    private func countWhitespaceAtFront(of data: String) -> Int {
+        guard let count = data.firstIndex(where: { $0 != "\n" || $0 != " " || $0 != "\0" || $0 != "\r" || $0 != "\t" }) else {
+            return 0
+        }
+        return count.utf16Offset(in: data) + 1
+    }
+    
 }
