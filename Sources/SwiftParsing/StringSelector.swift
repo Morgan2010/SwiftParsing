@@ -130,6 +130,16 @@ public struct StringSelector {
         return nil
     }
     
+    public func findSubString(after index: String.Index, with starting: Set<Character>, and ending: Set<Character>, in parent: String) -> IndexableSubString? {
+        guard
+            let range = findRangeForStartingCharacters(in: parent, for: starting, after: index),
+            let lastIndex = IndexableSubString(parent: parent, indexes: range).firstIndex(where: { ending.contains($0) })
+        else {
+            return nil
+        }
+        return IndexableSubString(parent: parent, indexes: range.lowerBound..<lastIndex)
+    }
+    
     private func findIndexes(for word: String, in parent: IndexableSubString) -> IndexableSubString? {
         let candidates = parent
         let wordCount = word.count
