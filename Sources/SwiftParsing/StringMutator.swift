@@ -15,16 +15,22 @@ public struct StringMutator {
         self.indentString = indentString
     }
     
-    public func createBlock(for str: String) -> String {
-        "{\n" + indentLines(data: str) + "\n}"
+    public func createBlock(for str: String, indent amount: Int = 0) -> String {
+        indentLines(data: "{\n" + indentLines(data: str) + "\n}", amount: amount)
     }
     
     public func indent(data: String, amount: Int = 1) -> String {
+        guard amount > 0 else {
+            return data
+        }
         let indentStringTotal = String(repeating: indentString, count: amount)
         return indentStringTotal + data
     }
     
     public func indentLines(data: String, amount: Int = 1) -> String {
+        guard amount > 0 else {
+            return data
+        }
         let lines = data.components(separatedBy: .newlines)
         let indentedLines = lines.map { indent(data: $0, amount: amount) }
         return indentedLines.reduce("") { joinWithNewLines(str1: $0, str2: $1) }
