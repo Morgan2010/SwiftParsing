@@ -51,7 +51,7 @@ public struct StringMutator {
     }
     
     public func removeRedundentIndentation(data: String) -> String {
-        guard let minIndent = (data.map { countWhitespaceAtFront(of: String($0)) }).min() else {
+        guard let minIndent = (data.compactMap { countWhitespaceAtFront(of: String($0)) }).min() else {
             return data
         }
         let redundentIndent = (minIndent / indentString.count) * indentString.count
@@ -60,9 +60,9 @@ public struct StringMutator {
         return sanitisedLines.reduce("") { joinWithNewLines(str1: $0, str2: String($1)) }
     }
     
-    private func countWhitespaceAtFront(of data: String) -> Int {
+    private func countWhitespaceAtFront(of data: String) -> Int? {
         guard let count = data.firstIndex(where: { $0 != "\n" || $0 != " " || $0 != "\0" || $0 != "\r" || $0 != "\t" }) else {
-            return 0
+            return nil
         }
         return count.utf16Offset(in: data) + 1
     }
