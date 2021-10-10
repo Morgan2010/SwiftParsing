@@ -40,10 +40,10 @@ public struct StringMutator {
         guard amount > 0 else {
             return str1 + str2
         }
-        if str1 == "" {
+        if str1.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return str2
         }
-        if str2 == "" {
+        if str2.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return str1
         }
         let newLines = String(repeating: "\n", count: amount)
