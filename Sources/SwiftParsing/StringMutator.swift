@@ -54,7 +54,7 @@ public struct StringMutator {
         guard let minIndent = (data.map { countWhitespaceAtFront(of: String($0)) }).min() else {
             return data
         }
-        let redundentIndent = minIndent / indentString.count
+        let redundentIndent = (minIndent / indentString.count) * indentString.count
         let components = data.components(separatedBy: .newlines)
         let sanitisedLines = components.map { $0.dropFirst(redundentIndent) }
         return sanitisedLines.reduce("") { joinWithNewLines(str1: $0, str2: String($1)) }
