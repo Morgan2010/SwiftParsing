@@ -51,7 +51,7 @@ public struct StringMutator {
     }
     
     public func removeRedundentIndentation(data: String) -> String {
-        guard let minIndent = (data.compactMap { countWhitespaceAtFront(of: String($0)) }).min() else {
+        guard let minIndent = (data.components(separatedBy: .newlines).compactMap { countWhitespaceAtFront(of: String($0)) }).min() else {
             return data
         }
         let redundentIndent = (minIndent / indentString.count) * indentString.count
