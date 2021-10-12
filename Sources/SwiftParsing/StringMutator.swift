@@ -13,6 +13,7 @@ public extension String {
         return "    "
     }
     
+    /// Creates a programming block with self indented inside it.
     var createBlock: String {
         self.createBlock()
     }
