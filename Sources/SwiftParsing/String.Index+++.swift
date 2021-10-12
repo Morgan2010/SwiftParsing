@@ -34,6 +34,9 @@ public extension String.Index {
         return String.Index(utf16Offset: newIndex, in: parent)
     }
     
+    /// Decrements the inex by 1 utf16 offset
+    /// - Parameter parent: The parent this index is used in.
+    /// - Returns: The new index. The index is bounded to the size of the parent string.
     func decrement(in parent: String) -> String.Index? {
         let newIndex = self.utf16Offset(in: parent) - 1
         guard newIndex > 0 else {

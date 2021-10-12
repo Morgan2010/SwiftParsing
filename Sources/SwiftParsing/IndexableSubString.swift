@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// A data structure for easily indexing strings.
 public struct IndexableSubString: Collection, IteratorProtocol {
     

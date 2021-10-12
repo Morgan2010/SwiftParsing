@@ -11,6 +11,9 @@ import Foundation
 /// A struct to help find sub strings within a parent string.
 public extension String {
     
+    /// Finds the first word in this string that matches the predicate.
+    /// - Parameter word: The word to match against.
+    /// - Returns: The SubString in this string for that word.
     func findIndexes(for word: String) -> IndexableSubString? {
         guard let firstIndex = self.firstIndex else {
             return nil
@@ -18,6 +21,11 @@ public extension String {
         return findIndexes(for: word, in: IndexableSubString(parent: self, indexes: firstIndex..<self.countIndex))
     }
     
+    /// Finds the first word in this string that matched a predicate. Begins searching after a specified index.
+    /// - Parameters:
+    ///   - word: The word to match against.
+    ///   - index: The index immediately before the first index to check for the word.
+    /// - Returns: The SubString representing the found word.
     func findIndexes(for word: String, after index: String.Index) -> IndexableSubString? {
         guard
             index < self.countIndex,
@@ -29,6 +37,11 @@ public extension String {
         return findIndexes(for: word, in: IndexableSubString(parent: self, indexes: range))
     }
     
+    /// Finds the first SubString that exists between 2 characters.
+    /// - Parameters:
+    ///   - first: The first character indicating the start of the sequence.
+    ///   - last: The last character indicating the end of the sequence.
+    /// - Returns: The SubString between the two characters.
     func findSubString(with first: Character, and last: Character) -> IndexableSubString? {
         guard
             let range = self.findRangeForStartingCharacters(for: [first]),
@@ -39,10 +52,20 @@ public extension String {
         return IndexableSubString(parent: self, indexes: range.lowerBound..<lastIndex)
     }
     
+    /// Finds the first SubString that exists between a balanced pair of characters
+    /// - Parameters:
+    ///   - balancedFirst: The first character in the sequence
+    ///   - balancedLast: The last character in the sequence
+    /// - Returns: The SubString bettween the two balanced characters.
     func findSubString(between balancedFirst: Character, and balancedLast: Character) -> IndexableSubString? {
         self.findSubString(between: [balancedFirst], and: [balancedLast])
     }
     
+    /// Finds the first SubString that exists between a balanced sets of characters.
+    /// - Parameters:
+    ///   - balancedLower: The Characters that may start the sequence.
+    ///   - balancedUpper: The Characters that may end the sequence.
+    /// - Returns: The SubString founds between the balanced sets of characters.
     func findSubString(between balancedLower: Set<Character>, and balancedUpper: Set<Character>) -> IndexableSubString? {
         guard let range = self.findRangeForStartingCharacters(for: balancedLower) else {
             return nil
@@ -125,6 +148,13 @@ public extension String {
         return nil
     }
     
+    /// Finds the first SubString between characters from a starting and ending set. The fucntion will begin search after a
+    /// specified index.
+    /// - Parameters:
+    ///   - index: The index immediately before the first index that is checked.
+    ///   - starting: The set of Characters that start the sequence.
+    ///   - ending: The set of Characters that end the sequence.
+    /// - Returns: The SubString found between the two sets of characters in this string.
     func findSubString(after index: String.Index, with starting: Set<Character>, and ending: Set<Character>) -> IndexableSubString? {
         guard
             let range = self.findRangeForStartingCharacters(for: starting, after: index),
