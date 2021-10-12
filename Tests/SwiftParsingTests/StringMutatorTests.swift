@@ -10,17 +10,11 @@ import XCTest
 @testable import SwiftParsing
 
 final class StringMutatorTests: XCTestCase {
-   
-    var mutator: StringMutator!
-    
-    override func setUp() {
-        mutator = StringMutator(indentString: "    ")
-    }
     
     func testCreateBlock() {
         let data = "A"
         let expected = "{\n    \(data)\n}"
-        let result = mutator.createBlock(for: data)
+        let result = data.createBlock()
         XCTAssertEqual(result, expected)
     }
     

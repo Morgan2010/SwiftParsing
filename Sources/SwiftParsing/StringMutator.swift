@@ -7,61 +7,71 @@
 
 import Foundation
 
-public struct StringMutator {
+public extension String {
     
-    var indentString: String = "    "
-    
-    public init(indentString: String = "    ") {
-        self.indentString = indentString
+    private var indentString: String {
+        return "    "
     }
     
-    public func createBlock(for str: String, indent amount: Int = 1) -> String {
-        "{\n" + indentLines(data: str, amount: amount) + "\n}"
+    var createBlock: String {
+        self.createBlock()
     }
     
-    public func indent(data: String, amount: Int = 1) -> String {
+    var indent: String {
+        self.indent()
+    }
+    
+    var indentLines: String {
+        self.indentLines()
+    }
+    
+    var removeRedundentIndentation: String {
+        guard let minIndent = self.components(separatedBy: .newlines).compactMap(\.countWhitespaceAtFront).min() else {
+            return self
+        }
+        let redundentIndent = (minIndent / indentString.count) * indentString.count
+        let components = self.components(separatedBy: .newlines)
+        let sanitisedLines = components.map { $0.dropFirst(redundentIndent) }
+        return sanitisedLines.reduce("") { $0.joinWithNewLines(str2: String($1)) }
+    }
+    
+    func createBlock(indent amount: Int = 1) -> String {
+        "{\n" + self.indentLines(amount: amount) + "\n}"
+    }
+    
+    func indent(amount: Int = 1) -> String {
         guard amount > 0 else {
-            return data
+            return self
         }
         let indentStringTotal = String(repeating: indentString, count: amount)
-        return indentStringTotal + data
+        return indentStringTotal + self
     }
     
-    public func indentLines(data: String, amount: Int = 1) -> String {
+    func indentLines(amount: Int = 1) -> String {
         guard amount > 0 else {
-            return data
+            return self
         }
-        let lines = data.components(separatedBy: .newlines)
-        let indentedLines = lines.map { indent(data: $0, amount: amount) }
-        return indentedLines.reduce("") { joinWithNewLines(str1: $0, str2: $1) }
+        let lines = self.components(separatedBy: .newlines)
+        let indentedLines = lines.map { $0.indent(amount: amount) }
+        return indentedLines.reduce("") { $0.joinWithNewLines(str2: $1) }
     }
     
-    public func joinWithNewLines(str1: String, str2: String, amount: Int = 1) -> String {
+    func joinWithNewLines(str2: String, amount: Int = 1) -> String {
         guard amount > 0 else {
-            return str1 + str2
+            return self + str2
         }
-        if str1 == "" {
+        if self == "" {
             return str2
         }
         if str2 == "" {
-            return str1
+            return self
         }
         let newLines = String(repeating: "\n", count: amount)
-        return str1 + newLines + str2
+        return self + newLines + str2
     }
     
-    public func removeRedundentIndentation(data: String) -> String {
-        guard let minIndent = (data.components(separatedBy: .newlines).compactMap { countWhitespaceAtFront(of: String($0)) }).min() else {
-            return data
-        }
-        let redundentIndent = (minIndent / indentString.count) * indentString.count
-        let components = data.components(separatedBy: .newlines)
-        let sanitisedLines = components.map { $0.dropFirst(redundentIndent) }
-        return sanitisedLines.reduce("") { joinWithNewLines(str1: $0, str2: String($1)) }
-    }
-    
-    private func countWhitespaceAtFront(of data: String) -> Int? {
-        guard let count = data.firstIndex(where: {
+    private var countWhitespaceAtFront: Int? {
+        guard let count = self.firstIndex(where: {
             guard let uc = $0.unicodeScalars.first else {
                 return false
             }
@@ -69,7 +79,7 @@ public struct StringMutator {
         }) else {
             return nil
         }
-        return count.utf16Offset(in: data) + 1
+        return count.utf16Offset(in: self)
     }
     
 }

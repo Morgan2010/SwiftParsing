@@ -11,89 +11,82 @@ import XCTest
 
 final class StringSelectorTests: XCTestCase {
     
-    private var selector: StringSelector?
+    private var parent: String!
     
-    private var parent: String?
-    
-    private var correct: String?
+    private var correct: String!
     
     private var firstIndex: String.Index {
-        parent!.firstIndex!
+        parent.firstIndex!
     }
     
     override func setUp() {
-        selector = StringSelector()
         parent = "abc$123}{d{ef}g}hi"
         correct = "123"
     }
     
     func testFindSubStringIsValid() {
-        XCTAssertNotNil(selector)
-        XCTAssertNotNil(parent)
-        let result = selector!.findSubString(after: firstIndex, between: "$", and: "}", in: parent!)
+        let result = parent.findSubString(after: firstIndex, between: "$", and: "}")
         XCTAssertNotNil(result)
         XCTAssertEqual(String(result!.value), correct)
     }
     
     func testFindSubStringReturnsNilForInvalidLowerBound() {
-        let result = selector!.findSubString(after: firstIndex, between: "!", and: "$", in: parent!)
+        let result = parent.findSubString(after: firstIndex, between: "!", and: "$")
         XCTAssertNil(result)
     }
     
     func testFindSubStringReturnsNilForInvalidUpperBound() {
-        let result = selector!.findSubString(after: firstIndex, between: "$", and: "!", in: parent!)
+        let result = parent.findSubString(after: firstIndex, between: "$", and: "!")
         XCTAssertNil(result)
     }
     
     func testFindSubStringReturnsNilForInvalidBounds() {
-        let result = selector!.findSubString(after: firstIndex, between: "}", and: "$", in: parent!)
+        let result = parent.findSubString(after: firstIndex, between: "}", and: "$")
         XCTAssertNil(result)
     }
     
     func testFindBalancedSubStringWorksUnderNormalValues() {
-        let result = selector!.findSubString(after: firstIndex, between: Set(arrayLiteral: "$"), and: Set(arrayLiteral: "}"), in: parent!)
+        let result = parent.findSubString(after: firstIndex, between: Set(arrayLiteral: "$"), and: Set(arrayLiteral: "}"))
         XCTAssertNotNil(result)
-        XCTAssertEqual(String(result!.value), correct!)
+        XCTAssertEqual(String(result!.value), correct)
     }
     
     func testFindBalancedSubStringNestedValues() {
-        let result = selector!.findSubString(after: firstIndex, between: Set(arrayLiteral: "{"), and: Set(arrayLiteral: "}"), in: parent!)
+        let result = parent.findSubString(after: firstIndex, between: Set(arrayLiteral: "{"), and: Set(arrayLiteral: "}"))
         XCTAssertNotNil(result)
         XCTAssertEqual(String(result!.value), "d{ef}g")
     }
     
     func testFindSubStringIsInvalidAfterOnlyCandidate() {
-        guard let newIndex = firstIndex.addToIndex(amount: 3, in: parent!) else {
+        guard let newIndex = firstIndex.addToIndex(amount: 3, in: parent) else {
             XCTAssertTrue(false)
             return
         }
-        let result = selector!.findSubString(after: newIndex, with: "$", and: "}", in: parent!)
+        let result = parent.findSubString(after: newIndex, with: "$", and: "}")
         XCTAssertNil(result)
     }
     
     func testFindSubStringIsStillValidJustBeforeOnlyCandidate() {
-        guard let newIndex = firstIndex.addToIndex(amount: 2, in: parent!) else {
+        guard let newIndex = firstIndex.addToIndex(amount: 2, in: parent) else {
             XCTAssertTrue(false)
             return
         }
-        let result = selector!.findSubString(after: newIndex, with: "$", and: "}", in: parent!)
+        let result = parent.findSubString(after: newIndex, with: "$", and: "}")
         XCTAssertNotNil(result)
-        XCTAssertEqual(String(result!.value), correct!)
+        XCTAssertEqual(String(result!.value), correct)
     }
     
     func testFindSubStringReturnsNilForLastIndex() {
-        guard let newIndex = firstIndex.addToIndex(amount: 17, in: parent!) else {
+        guard let newIndex = firstIndex.addToIndex(amount: 17, in: parent) else {
             XCTAssertTrue(false)
             return
         }
-        let result = selector!.findSubString(after: newIndex, with: "$", and: "}", in: parent!)
+        let result = parent.findSubString(after: newIndex, with: "$", and: "}")
         XCTAssertNil(result)
     }
     
     func testFindSubStringIsValidForLastIndex() {
-        XCTAssertNotNil(selector)
-        XCTAssertNotNil(parent)
-        let result = selector!.findSubString(after: firstIndex, between: "g", and: "i", in: parent!)
+        let result = parent.findSubString(after: firstIndex, between: "g", and: "i")
         XCTAssertNotNil(result)
         XCTAssertEqual(String(result!.value), "}h")
     }
