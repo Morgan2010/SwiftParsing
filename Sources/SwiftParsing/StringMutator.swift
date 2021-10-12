@@ -43,7 +43,7 @@ public extension String {
     /// - Parameter amount: The amount of indentation within the block.
     /// - Returns: The new string within a programmign block.
     func createBlock(indent amount: Int = 1) -> String {
-        "{\n" + self.indentLines(amount: amount) + "\n}"
+        "{\n" + self.indentLines(amount: amount < 0 ? 1 : amount) + "\n}"
     }
     
     /// Indent a string by an amount.
