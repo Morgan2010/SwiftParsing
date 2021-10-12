@@ -16,7 +16,7 @@ public struct StringMutator {
     }
     
     public func createBlock(for str: String, indent amount: Int = 1) -> String {
-        indentLines(data: "{\n" + indentLines(data: str, amount: amount) + "\n}")
+        "{\n" + indentLines(data: str, amount: amount) + "\n}"
     }
     
     public func indent(data: String, amount: Int = 1) -> String {
